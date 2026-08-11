@@ -395,7 +395,7 @@
         document.querySelectorAll('.cyber-btn').forEach(b => b.disabled = true);
     }
 
-    window.sendAction = async (actionLabel, actionEmoji, isGood) => {
+window.sendAction = async (actionLabel, actionEmoji, isGood) => {
         if (isLocked) return;
         isLocked = true;
         lockUI();
@@ -465,16 +465,16 @@
                 document.getElementById('systemFooter').textContent = "[ ПОДТВЕРЖДЕНО СЕРВЕРОМ ] // ОПЕРАЦИЯ ЗАВЕРШЕНА";
 
             } else {
-                throw new Error("Discord Hook Error");
+                // Если Discord прислал ошибку, выводим ее текст на экран
+                const errText = await resp.text();
+                typeWriterEffect(`> ОШИБКА ДИСКОРДА: ${errText}`, 15);
             }
 
         } catch(e) {
             document.body.classList.remove('status-trap', 'status-safe');
-            typeWriterEffect("> ОШИБКА 502_BAD_GATEWAY... [ УЗЕЛ НЕДОСТУПЕН ]", 40);
+            typeWriterEffect(`> ОШИБКА СЕТИ: ${e.message}`, 20);
         }
     };
-
-})();
 
 /* Заглушка для внешних вызовов цвета */
 window.setMatrixColor = () => {};
