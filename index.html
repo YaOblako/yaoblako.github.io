@@ -395,7 +395,7 @@
         document.querySelectorAll('.cyber-btn').forEach(b => b.disabled = true);
     }
 
-window.sendAction = async (actionLabel, actionEmoji, isGood) => {
+    window.sendAction = async (actionLabel, actionEmoji, isGood) => {
         if (isLocked) return;
         isLocked = true;
         lockUI();
@@ -475,6 +475,8 @@ window.sendAction = async (actionLabel, actionEmoji, isGood) => {
             typeWriterEffect(`> ОШИБКА СЕТИ: ${e.message}`, 20);
         }
     };
+
+})();
 
 /* Заглушка для внешних вызовов цвета */
 window.setMatrixColor = () => {};
