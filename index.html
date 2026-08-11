@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚠️ ВЗЛОМАН ⚠️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-red: #ff2222;
+            --neon-green: #22ff44;
+            --neon-purple: #ff22ff;
+            --neon-gold: #ffd700;
+            --bg-color: #050505;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at center, rgba(255, 0, 0, 0.05) 0%, transparent 60%),
+                linear-gradient(rgba(255,0,0,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,0,0,0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 20px 20px, 20px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Share Tech Mono', monospace;
+            padding: 16px;
+            overflow: hidden;
+            animation: pulse-bg 4s infinite alternate;
+        }
+
+        /* Эффект старого телевизора (CRT) */
+        body::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .card {
+            position: relative;
+            z-index: 10;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            max-width: 650px;
+            width: 100%;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.2), inset 0 0 20px rgba(255, 34, 34, 0.5);
+            text-align: center;
+            color: #f0f0f0;
+            border: 1px solid var(--neon-red);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card.safe { border-color: var(--neon-green); box-shadow: 0 0 50px rgba(0, 255, 0, 0.2), inset 0 0 20px rgba(34, 255, 68, 0.5); }
+        .card.error, .card.used { border-color: var(--neon-red); box-shadow: 0 0 80px rgba(255, 0, 0, 0.6), inset 0 0 40px rgba(255, 0, 0, 0.8); }
+
+        /* Глитч-эффект для заголовка */
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: #fff;
+            position: relative;
+            text-shadow: 0 0 10px var(--neon-red);
+            margin-bottom: 20px;
+        }
+
+        h1::before, h1::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+        h1::before {
+            left: 2px;
+            text-shadow: -2px 0 #00ffff;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        h1::after {
+            left: -2px;
+            text-shadow: -2px 0 #ff00ff;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+
+        .anon-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(255,255,255,0.05);
+        }
+
+        .timer {
+            font-size: 5.5rem;
+            font-weight: 800;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 15px;
+            margin: 10px 0 25px;
+            border: 2px solid var(--neon-red);
+            color: #ff5555;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3), inset 0 0 15px rgba(255, 0, 0, 0.2);
+            transition: 0.3s;
+        }
+
+        .timer.danger {
+            color: #ff0000;
+            animation: timer-flash 0.5s infinite;
+        }
+
+        .sub {
+            font-size: 1.3rem;
+            background: rgba(42, 26, 26, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid var(--neon-red);
+            border-right: 5px solid var(--neon-red);
+            margin-bottom: 35px;
+            color: #ffc0c0;
+            line-height: 1.6;
+            text-shadow: 0 0 5px rgba(255,0,0,0.5);
+        }
+
+        .sub strong {
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--neon-red);
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .btn {
+            position: relative;
+            display: block;
+            width: 100%;
+            padding: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 900;
+            border: none;
+            border-radius: 12px;
+            background: #111;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 10%; height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: skewX(-45deg) translateX(-150%);
+            transition: all 0.5s;
+            z-index: -1;
+        }
+
+        .btn:hover::before { transform: skewX(-45deg) translateX(1000%); }
+        .btn:active { transform: scale(0.96); }
+        .btn:disabled { opacity: 0.3; pointer-events: none; filter: grayscale(1); }
+
+        .btn-danger { border: 2px solid #ff3333; box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); text-shadow: 0 0 5px #ff3333; }
+        .btn-danger:hover { background: #ff3333; box-shadow: 0 0 30px rgba(255, 0, 0, 0.8); }
+
+        .btn-warning { border: 2px solid #ffaa00; box-shadow: 0 0 15px rgba(255, 170, 0, 0.4); text-shadow: 0 0 5px #ffaa00; }
+        .btn-warning:hover { background: #ffaa00; color: #000; box-shadow: 0 0 30px rgba(255, 170, 0, 0.8); }
+
+        .btn-dark { border: 2px solid #aaaaaa; box-shadow: 0 0 15px rgba(170, 170, 170, 0.4); text-shadow: 0 0 5px #aaa; }
+        .btn-dark:hover { background: #aaaaaa; color: #000; box-shadow: 0 0 30px rgba(170, 170, 170, 0.8); }
+
+        .btn-good { border: 2px solid #33ff77; box-shadow: 0 0 15px rgba(0, 255, 0, 0.4); text-shadow: 0 0 5px #33ff77; }
+        .btn-good:hover { background: #33ff77; color: #000; box-shadow: 0 0 30px rgba(0, 255, 0, 0.8); }
+
+        .status-message {
+            margin: 20px 0 10px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            height: 30px;
+            color: #ffbb77;
+            text-shadow: 0 0 10px rgba(255, 187, 119, 0.5);
+        }
+        .status-message.safe { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
+        .status-message.error { color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red); }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #666;
+            border-top: 1px dashed #333;
+            padding-top: 20px;
+            letter-spacing: 1px;
+        }
+
+        /* Анимации */
+        @keyframes pulse-bg {
+            0% { background-color: #050000; }
+            100% { background-color: #1a0000; }
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 86px, 0); transform: skew(0.8deg); }
+            5% { clip: rect(70px, 9999px, 12px, 0); transform: skew(0.2deg); }
+            10% { clip: rect(21px, 9999px, 98px, 0); transform: skew(0.5deg); }
+            15% { clip: rect(45px, 9999px, 23px, 0); transform: skew(0.1deg); }
+            20% { clip: rect(89px, 9999px, 54px, 0); transform: skew(0.9deg); }
+            25% { clip: rect(12px, 9999px, 76px, 0); transform: skew(0.4deg); }
+            30% { clip: rect(56px, 9999px, 34px, 0); transform: skew(0.7deg); }
+            35% { clip: rect(98px, 9999px, 11px, 0); transform: skew(0.3deg); }
+            40% { clip: rect(34px, 9999px, 87px, 0); transform: skew(0.6deg); }
+            45% { clip: rect(67px, 9999px, 45px, 0); transform: skew(0.2deg); }
+            50% { clip: rect(23px, 9999px, 98px, 0); transform: skew(0.8deg); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); transform: skew(0.1deg); }
+            5% { clip: rect(12px, 9999px, 54px, 0); transform: skew(0.9deg); }
+            10% { clip: rect(87px, 9999px, 23px, 0); transform: skew(0.3deg); }
+            15% { clip: rect(34px, 9999px, 76px, 0); transform: skew(0.7deg); }
+            20% { clip: rect(98px, 9999px, 12px, 0); transform: skew(0.4deg); }
+            25% { clip: rect(45px, 9999px, 89px, 0); transform: skew(0.6deg); }
+            30% { clip: rect(21px, 9999px, 45px, 0); transform: skew(0.2deg); }
+            35% { clip: rect(76px, 9999px, 98px, 0); transform: skew(0.8deg); }
+            40% { clip: rect(11px, 9999px, 34px, 0); transform: skew(0.5deg); }
+            45% { clip: rect(54px, 9999px, 67px, 0); transform: skew(0.1deg); }
+            50% { clip: rect(89px, 9999px, 21px, 0); transform: skew(0.9deg); }
+        }
+
+        @keyframes timer-flash {
+            0% { text-shadow: 0 0 20px #ff0000; transform: scale(1); }
+            50% { text-shadow: 0 0 50px #ff0000, 0 0 80px #ff0000; transform: scale(1.05); color: #fff; }
+            100% { text-shadow: 0 0 20px #ff0000; transform: scale(1); }
+        }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 30px 20px; }
+            h1 { font-size: 2.2rem; }
+            .timer { font-size: 4rem; }
+            .btn { font-size: 1.1rem; padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card" id="mainCard">
+    <h1 id="mainTitle" data-text="⚠️ ВЗЛОМАН ⚠️">⚠️ ВЗЛОМАН ⚠️</h1>
+    
+    <div class="anon-badge">
+        <span>👤 АНОНИМНЫЙ РЕЖИМ • IP СКРЫТ</span>
+    </div>
+    
+    <div class="timer" id="timerDisplay">01:00:00</div>
+    
+    <div class="sub" id="subText">
+        🔥 <strong>ДАКНАР — ПЛОХОЙ ЧЕЛОВЕК</strong> 🔥<br>
+        <span style="font-size: 1rem; opacity: 0.8; font-family: 'Share Tech Mono';">Система ждет твоего приговора...</span>
+    </div>
+
+    <div class="status-message" id="statusMsg">>[ ОЖИДАНИЕ ВВОДА ]_</div>
+
+    <div class="btn-group" id="btnGroup">
+        <button class="btn btn-danger" id="btn1">🤬 ДОЛБОЕБ ДАКНАР</button>
+        <button class="btn btn-warning" id="btn2">🍆 ПИДАРАС</button>
+        <button class="btn btn-dark" id="btn3">🗣️ ПИЗДАБОЛ ДАКНАР</button>
+        <button class="btn btn-good" id="btn4">😇 ДАКНАР ХОРОШИЙ ЧЕЛОВЕК</button>
+    </div>
+
+    <div class="footer">
+        🕵️ СОЕДИНЕНИЕ ЗАШИФРОВАНО • WEBHOOK АКТИВЕН
+    </div>
+</div>
+
+<script>
+(function() {
+    // 🛡️ ЖЕСТКАЯ ЗАЩИТА
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        const key = e.key.toUpperCase();
+        const ctrl = e.ctrlKey || e.metaKey;
+        if (key === 'F12' || (ctrl && e.shiftKey && ['I','J','C'].includes(key)) || (ctrl && ['U','S','C','V','X','A'].includes(key))) {
+            e.preventDefault();
+        }
+    });
+    document.addEventListener('selectstart', e => e.preventDefault());
+    document.addEventListener('dragstart', e => e.preventDefault());
+
+    // 🔐 ВЕБХУК
+    const WEBHOOK_URL = 'https://discord.com/api/webhooks/1536781549452787842/Cir5Tad8gvfy53OkWDyExr67qWPjjuXNlLWUSrMkOmP2o2FB7bFlvVqgE1507klMKp9Z';
+
+    function getDeviceType() {
+        const ua = navigator.userAgent;
+        if (/iPad|Android(?!.*Mobile)/i.test(ua)) return '📱 Планшет';
+        if (/Mobi|Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(ua)) return '📱 Телефон';
+        return '🖥️ ПК / Ноутбук';
+    }
+
+    // ⏱️ ПРОДВИНУТЫЙ ТАЙМЕР (С МИЛЛИСЕКУНДАМИ)
+    let timeLeft = 60000; // 60 секунд в миллисекундах
+    let lastTime = performance.now();
+    let timerInterval = null;
+    let isLocked = false;
+    let isUsed = false;
+
+    const timerDisplay = document.getElementById('timerDisplay');
+    const mainCard = document.getElementById('mainCard');
+    const mainTitle = document.getElementById('mainTitle');
+    const subText = document.getElementById('subText');
+    const statusMsg = document.getElementById('statusMsg');
+    const allBtns = document.querySelectorAll('.btn');
+
+    function updateTimer(currentTime) {
+        if (isLocked) return;
+
+        const deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
+        timeLeft -= deltaTime;
+
+        if (timeLeft <= 0) {
+            timeLeft = 0;
+            isLocked = true;
+            allBtns.forEach(b => b.disabled = true);
+            statusMsg.textContent = '>[ КРИТИЧЕСКАЯ ОШИБКА: ВРЕМЯ ВЫШЛО ]_';
+            statusMsg.className = 'status-message error';
+            mainCard.className = 'card used shake';
+            mainTitle.textContent = 'СИСТЕМА ЗАБЛОКИРОВАНА';
+            mainTitle.setAttribute('data-text', 'СИСТЕМА ЗАБЛОКИРОВАНА');
+            subText.innerHTML = '💀 <strong>ТЫ НЕ УСПЕЛ, ДАННЫЕ УДАЛЕНЫ</strong> 💀';
+            document.body.style.animation = 'none';
+            document.body.style.backgroundColor = '#200000';
+            timerDisplay.textContent = '00:00:00';
+            return;
+        }
+
+        const totalSeconds = Math.floor(timeLeft / 1000);
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        const ms = Math.floor((timeLeft % 1000) / 10);
+
+        timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}:${String(ms).padStart(2, '0')}`;
+
+        // Паника когда меньше 10 секунд
+        if (timeLeft < 10000 && !timerDisplay.classList.contains('danger')) {
+            timerDisplay.classList.add('danger');
+            document.body.style.animationDuration = '0.5s'; // Ускоряем пульсацию фона
+        }
+
+        requestAnimationFrame(updateTimer);
+    }
+
+    function startTimer() {
+        lastTime = performance.now();
+        requestAnimationFrame(updateTimer);
+    }
+
+    // 📤 ОТПРАВКА В ВЕБХУК
+    async function sendToWebhook(choice, emoji) {
+        if (isUsed || isLocked) return;
+
+        isUsed = true;
+        isLocked = true;
+        allBtns.forEach(b => b.disabled = true);
+        
+        mainCard.classList.add('shake'); // Эффект тряски при выборе
+        setTimeout(() => mainCard.classList.remove('shake'), 500);
+
+        const timestamp = new Date().toLocaleString('ru-RU');
+        const device = getDeviceType();
+        
+        let embed;
+        if (choice === 'ДАКНАР ХОРОШИЙ ЧЕЛОВЕК') {
+            embed = {
+                title: '⚠️ КРИТИЧЕСКАЯ ОШИБКА: ОБНАРУЖЕН ПРЕДАТЕЛЬ ⚠️',
+                color: 0xff0000,
+                description: '**Был выбран вариант: "ДАКНАР ХОРОШИЙ ЧЕЛОВЕК"**\n\n' +
+                             '😈 **Система сообщает:**\n' +
+                             '> *"Ты серьезно? Дакнар — хороший? Ха-ха! Тебе конец!*\n' +
+                             '> *Протокол уничтожения запущен. Твой выбор — это приговор."*\n\n' +
+                             '🔪 **ГОТОВЬСЯ К ПОСЛЕДСТВИЯМ!**',
+                fields: [
+                    { name: '⏱️ ВРЕМЯ ФИКСАЦИИ', value: timestamp, inline: true },
+                    { name: '💻 УСТРОЙСТВО', value: device, inline: true }
+                ],
+                footer: { text: 'SYSTEM OVERRIDE • ПРОТОКОЛ [СМЕРТЬ]' },
+                timestamp: new Date().toISOString()
+            };
+        } else {
+            embed = {
+                title: '🟢 УСПЕШНЫЙ ВЗЛОМ: ДАННЫЕ ЗАПИСАНЫ',
+                color: 0x22ff44,
+                fields: [
+                    { name: '📌 ВЕРДИКТ', value: `${emoji} **${choice}**`, inline: false },
+                    { name: '⏱️ ВРЕМЯ', value: timestamp, inline: true },
+                    { name: '💻 УСТРОЙСТВО', value: device, inline: true }
+                ],
+                footer: { text: '⚠️ АНОНИМНЫЙ ДОСТУП ПОДТВЕРЖДЕН' },
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        try {
+            const response = await fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ embeds: [embed] })
+            });
+
+            if (response.ok) {
+                statusMsg.textContent = '>[ ДАННЫЕ УСПЕШНО ПЕРЕДАНЫ ]_';
+                statusMsg.className = 'status-message safe';
+                mainCard.className = 'card safe';
+                mainTitle.textContent = 'ДОСТУП ЗАКРЫТ';
+                mainTitle.setAttribute('data-text', 'ДОСТУП ЗАКРЫТ');
+                subText.innerHTML = '🎯 <strong>ТВОЙ ВЫБОР ЗАФИКСИРОВАН В БАЗЕ</strong> 🎯';
+                timerDisplay.classList.remove('danger');
+                timerDisplay.style.color = 'var(--neon-green)';
+                timerDisplay.style.borderColor = 'var(--neon-green)';
+                document.body.style.backgroundImage = 'radial-gradient(circle at center, rgba(0, 255, 0, 0.05) 0%, transparent 60%), linear-gradient(rgba(0,255,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,0,0.03) 1px, transparent 1px)';
+            } else {
+                throw new Error('Network response was not ok');
+            }
+        } catch (error) {
+            statusMsg.textContent = '>[ ОШИБКА ПОДКЛЮЧЕНИЯ К СЕРВЕРУ ]_';
+            statusMsg.className = 'status-message error';
+            isUsed = false;
+            isLocked = false;
+            allBtns.forEach(b => b.disabled = false);
+            startTimer(); // Возобновляем если ошибка
+        }
+    }
+
+    // 🎯 КНОПКИ
+    const btnMap = [
+        { id: 'btn1', label: 'ДОЛБОЕБ ДАКНАР', emoji: '🤬' },
+        { id: 'btn2', label: 'ПИДАРАС', emoji: '🍆' },
+        { id: 'btn3', label: 'ПИЗДАБОЛ ДАКНАР', emoji: '🗣️' },
+        { id: 'btn4', label: 'ДАКНАР ХОРОШИЙ ЧЕЛОВЕК', emoji: '😇' }
+    ];
+
+    btnMap.forEach(({ id, label, emoji }) => {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.addEventListener('click', () => {
+                if (isLocked || isUsed) return;
+                statusMsg.textContent = '>[ УСТАНОВКА СОЕДИНЕНИЯ... ]_';
+                statusMsg.style.color = '#fff';
+                sendToWebhook(label, emoji);
+            });
+        }
+    });
+
+    // 🚀 ЗАПУСК
+    startTimer();
+})();
+</script>
+</body>
+</html>
