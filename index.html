@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ya.Oblako — Страницы</title>
+<style>
+  /* ===== ОБЩИЕ НАСТРОЙКИ СТРАНИЦЫ ===== */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 16px;
+    overflow-x: hidden;
+    position: relative;
+    
+    /* Увеличенный градиент с плавной анимацией "дыхания" */
+    background: linear-gradient(160deg, #0b1026 0%, #1c2541 50%, #2e3a5c 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Сетка из точек */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  #snow {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ===== СЛОЙ БЛЮРА ===== */
+  .blur-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 2;
+    pointer-events: none;
+    --x: -100px;
+    --y: -100px;
+    -webkit-mask-image: radial-gradient(circle at var(--x) var(--y), transparent 0px, transparent 40px, black 160px);
+    mask-image: radial-gradient(circle at var(--x) var(--y), transparent 0px, transparent 40px, black 160px);
+  }
+
+  /* ===== ШАПКА ===== */
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 3;
+    perspective: 1000px; /* Для 3D эффекта аватара */
+  }
+
+  .avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 10%;
+    object-fit: cover;
+    background: #2a2f45;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    cursor: pointer;
+  }
+
+  .header h1 {
+    margin-top: 16px;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  .header p {
+    margin-top: 4px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  /* ===== КАРТОЧКА ===== */
+  .card-wrapper {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 420px;
+    perspective: 1000px; /* Камера для наклона */
+  }
+
+  .card {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    transform-style: preserve-3d;
+  }
+
+  /* ===== КНОПКИ ===== */
+  .link-button {
+    display: block;
+    width: 100%;
+    padding: 12px 12px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    background: #232942;
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+  }
+
+  .link-button:hover {
+    transform: scale(1.05) translateZ(10px); /* Вытягивается вперед при 3D наклоне */
+  }
+
+  .link-button:active {
+    transform: scale(0.99) translateZ(0);
+  }
+
+  /* Анимация при загрузке */
+  .header, .card-wrapper { animation: fadeUp 0.6s ease both; }
+  .card-wrapper { animation-delay: 0.15s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 480px) {
+    .header h1 { font-size: 22px; }
+    .avatar { width: 84px; height: 84px; }
+    .card { padding: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .header, .card-wrapper, body { animation: none; }
+    .link-button, .card { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <canvas id="snow"></canvas>
+  <div class="blur-overlay" id="blur-overlay"></div>
+
+  <header class="header">
+    <!-- Обязательно id="avatar" для пасхалок -->
+    <img class="avatar" id="avatar" src="https://cdn.discordapp.com/avatars/1078643766673543188/492eba22c075b25c812c1e6d306bc83b.png?size=512" alt="Аватар Ya.Oblako" onerror="this.style.display='none'" />
+    <h1>Ya.Oblako</h1>
+    <p>Страницы</p>
+  </header>
+
+  <!-- ВОТ ЭТА ОБЁРТКА ОЧЕНЬ ВАЖНА (card-wrapper) -->
+  <div class="card-wrapper">
+    <main class="card" id="links"></main>
+  </div>
+
+  <script>
+    // ===== ПАСХАЛКА В КОНСОЛИ =====
+    console.log('%c ☁️ Ya.Oblako %c\n\nПопробуй ввести на клавиатуре "oblako" или покликать на аватарку!', 
+      'background: #232942; color: #fff; font-size: 20px; font-weight: bold; border-radius: 4px; padding: 4px;',
+      'font-size: 14px; color: #5e9fe8;'
+    );
+
+    // ===== ГЛОБАЛЬНЫЕ КООРДИНАТЫ КУРСОВА =====
+    let cursorX = -1000, cursorY = -1000;
+    const blurOverlay = document.getElementById("blur-overlay");
+
+    if (blurOverlay) {
+      window.addEventListener("mousemove", (e) => {
+        cursorX = e.clientX;
+        cursorY = e.clientY;
+        blurOverlay.style.setProperty("--x", `${cursorX}px`);
+        blurOverlay.style.setProperty("--y", `${cursorY}px`);
+      });
+
+      window.addEventListener("touchmove", (e) => {
+        cursorX = e.touches[0].clientX;
+        cursorY = e.touches[0].clientY;
+        blurOverlay.style.setProperty("--x", `${cursorX}px`);
+        blurOverlay.style.setProperty("--y", `${cursorY}px`);
+      });
+    }
+
+    // ===== 3D НАКЛОН КАРТОЧКИ =====
+    const cardWrapper = document.querySelector('.card-wrapper');
+    const card = document.querySelector('.card');
+
+    if (cardWrapper && card) {
+      cardWrapper.addEventListener('mousemove', (e) => {
+        const rect = cardWrapper.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        // Вычисляем градус наклона (макс 6 градусов)
+        const rotateX = ((y - centerY) / centerY) * -6; 
+        const rotateY = ((x - centerX) / centerX) * 6;
+
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.transition = 'transform 0.1s linear';
+      });
+
+      cardWrapper.addEventListener('mouseleave', () => {
+        card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+        card.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+      });
+    }
+
+    // ===== ЛОГИКА КНОПОК =====
+    const LINKS = [
+      { text: "Фейк Нитро", url: "https://yaoblako.github.io/nitro/" },
+      { text: "Хацкер228",   url: "https://yaoblako.github.io/hacker228/" },
+    ];
+
+    const linksContainer = document.getElementById("links");
+    if (linksContainer) {
+      for (const link of LINKS) {
+        const a = document.createElement("a");
+        a.className = "link-button";
+        a.href = link.url;
+        a.textContent = link.text;
+        linksContainer.appendChild(a);
+      }
+    }
+
+    // ===== ПАСХАЛКА 1: АВАТАРКА + БУРЯ =====
+    const avatar = document.getElementById('avatar');
+    let avatarClicks = 0;
+    let isBlizzard = false;
+    
+    if (avatar) {
+      avatar.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      avatar.addEventListener('click', () => {
+        avatarClicks++;
+        avatar.style.transform = 'scale(0.85)'; // сжимается
+        setTimeout(() => {
+          avatar.style.transform = `scale(1) rotate(${avatarClicks * 360}deg)`; // крутится
+        }, 100);
+
+        if (avatarClicks % 5 === 0) {
+          isBlizzard = true; // Снежная буря
+          setTimeout(() => { isBlizzard = false; }, 4000); // на 4 секунды
+        }
+      });
+    }
+
+    // ===== ПАСХАЛКА 2: ВВОД СЛОВА "OBLAKO" =====
+    const secretCode = ['o','b','l','a','k','o'];
+    let codeIndex = 0;
+    let oblakoMode = false;
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key && typeof e.key === 'string') {
+        if (e.key.toLowerCase() === secretCode[codeIndex]) {
+          codeIndex++;
+          if (codeIndex === secretCode.length) {
+            oblakoMode = !oblakoMode; // Вкл/выкл облачков
+            codeIndex = 0;
+          }
+        } else {
+          codeIndex = 0;
+        }
+      }
+    });
+
+    // ===== АНИМАЦИЯ СНЕЖИНОК (+ ИНТЕРАКТИВ И ОБЛАКА) =====
+    const canvas = document.getElementById("snow");
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      let width, height, flakes = [];
+
+      const FLAKE_COUNT = 120;
+      const MIN_SIZE = 1;
+      const MAX_SIZE = 3.5;
+      const MIN_SPEED = 0.4;
+      const MAX_SPEED = 1.4;
+
+      function createFlake(startAnywhere) {
+        return {
+          x: Math.random() * width,
+          y: startAnywhere ? Math.random() * height : -20,
+          size: MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE),
+          speed: MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED),
+          opacity: 0.3 + Math.random() * 0.5,
+          sway: Math.random() * Math.PI * 2,
+          swaySpeed: 0.005 + Math.random() * 0.01,
+        };
+      }
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        flakes = Array.from({ length: FLAKE_COUNT }, () => createFlake(true));
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      function tick() {
+        ctx.clearRect(0, 0, width, height);
+        
+        for (const flake of flakes) {
+          // Ускорение во время пасхалки с бурей
+          const currentSpeed = isBlizzard ? flake.speed * 6 : flake.speed;
+          const currentSway = isBlizzard ? (Math.sin(flake.sway) * 4 + 3) : (Math.sin(flake.sway) * 0.4);
+
+          flake.y += currentSpeed;
+          flake.sway += flake.swaySpeed;
+          flake.x += currentSway;
+
+          // Отталкивание снега от курсора
+          if (!isBlizzard) {
+            const dx = flake.x - cursorX;
+            const dy = flake.y - cursorY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 100) {
+              const force = (100 - dist) / 100;
+              flake.x += (dx / dist) * force * 2;
+            }
+          }
+
+          if (flake.y > height + 20 || flake.x > width + 20 || flake.x < -20) {
+            Object.assign(flake, createFlake(false));
+          }
+
+          ctx.globalAlpha = flake.opacity;
+
+          // Рисуем облачко или снежинку
+          if (oblakoMode) {
+            ctx.font = `${flake.size * 6}px sans-serif`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("☁️", flake.x, flake.y);
+          } else {
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(flake.x, flake.y, flake.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(tick);
+      }
+
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!reducedMotion) tick();
+    }
+  </script>
+</body>
+</html>
